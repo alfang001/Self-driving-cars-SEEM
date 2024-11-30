@@ -1,7 +1,10 @@
+import argparse
+
 import torch
 
 
-def main():
+# Make the main file accept arguments
+def main(kwargs):
     # Load the model
     model = torch.load('model.pth')
     print(model)
@@ -10,4 +13,11 @@ def main():
     # TODO: can call the model with model(input) to get the output
 
 if __name__ == '__main__':
-    main()
+    # Parse the arguments from the commandline
+    parser = argparse.ArgumentParser()
+    # Add the arguments
+    parser.add_argument('--input', type=str, help='The input file path')
+    # Parse the arguments
+    args = parser.parse_args()
+    # Call the main function
+    main(args)
