@@ -16,7 +16,7 @@ if __name__ == '__main__':
     # Parse the arguments from the commandline
     parser = argparse.ArgumentParser()
     # Add the arguments
-    parser.add_argument('--input', type=str, help='The input file path')
+    parser.add_argument('--model-path', '-p', type=str, help='The input file path')
     # Parse the arguments
     args = parser.parse_args()
     # Call the main function

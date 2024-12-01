@@ -24,7 +24,7 @@ conda remove -n SEEM-env --all
 
 ## Steps for Loading a Pretrained SEEM Model
 
-First load the model:
+First download the model:
 ```bash
 wget https://huggingface.co/xdecoder/SEEM/resolve/main/seem_focall_v1.pt
 ```
@@ -35,5 +35,10 @@ module load python3.10-anaconda
 conda create -n SEEM-env python==3.10 -y
 conda activate SEEM-env
 module load cuda/11.8.0
-conda install pytorch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 pytorch-cuda=11.8 -c pytorch -c nvidia
+conda install pytorch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 pytorch-cuda=11.8 -c pytorch -c nvidia -y
+```
+
+Run the `load_seem.py` script to load the model and pass the path to the download:
+```bash
+python load_seem.py --model-path=<path/to/model>
 ```
