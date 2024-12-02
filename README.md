@@ -52,3 +52,28 @@ Run the `load_seem.py` script to load the model and pass the path to the downloa
 ```bash
 python load_seem.py --model-path=<path/to/model>
 ```
+
+## Using Singularity Container on ARC
+### Building the Container
+Singularity allows us to install dependencies that would otherwise require `sudo`, which is not allowed on ARC. I used [lightning.ai](lightning.ai) to run the build steps. Two files need to be added to the lightning session from our repo, [create_seem_singularity.sh](./singularity/create_seem_singularity.sh) and [seem.def](./singularity/seem.def).
+
+Once on lightning, you can run:
+
+```bash
+chmod +x create_seem_singularity.sh
+sudo ./create_seem_singularity.sh
+```
+
+which will create a file called `seem_container.sif`. This is what is used on ARC to run the model within. To copy the container to ARC, use the following command
+```bash
+rsync -av -e ssh original/ uniqname@greatlakes.arc-ts.umich.edu:/path/to/destination/
+```
+
+### Running on ARC
+To run on arc, first load `singularity 4.3.1` into the session, then run the container:
+```bash
+module load singularity/4.3.1
+singularity run --nv vln_diffusion.sif
+```
+
+which will run whatever script you have placed under the `%runscript` section in [seem.def](./singularity/seem.def).

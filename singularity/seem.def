@@ -1,0 +1,49 @@
+Bootstrap: docker
+From: nvidia/cuda:12.1.0-devel-ubuntu22.04
+
+%environment
+    export LC_ALL=C
+    export PATH="/usr/local/cuda/bin:$PATH"
+    export LD_LIBRARY_PATH="/usr/local/cuda/lib64:$LD_LIBRARY_PATH"
+
+%post
+    # Set noninteractive installation
+    export DEBIAN_FRONTEND=noninteractive
+
+    # Update and install system dependencies
+    apt-get update && apt-get install -y \
+        python3.10 \
+        python3-pip \
+        python3.10-dev \
+        libgl1-mesa-dev \
+        libglu1-mesa-dev \
+        git \
+        wget \
+        curl \
+        unzip \
+        cmake \
+        openmpi-bin \
+        openmpi-doc \
+        libopenmpi-dev \
+        && apt-get clean
+
+    # Set Python 3.10 as default
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
+    update-alternatives --set python3 /usr/bin/python3.10
+
+    # Upgrade pip
+    pip3 install --upgrade pip
+
+    # Clone the repo
+    git clone --recursive https://github.com/alfang001/Self-driving-cars-SEEM.git
+
+    # Install the requirements
+    cd Self-driving-cars-SEEM/Segment-Everything-Everywhere-All-At-Once
+    pip3 install -r assets/requirements/requirements.txt
+    pip3 install -r assets/requirements/requirements_custom.txt
+    cd modeling/vision/encoder/ops && sh make.sh && cd ../../../../
+
+    # Back to the main directory to download model
+    cd ..
+    wget https://huggingface.co/xdecoder/SEEM/resolve/main/seem_focall_v1.pt
+
