@@ -11,8 +11,7 @@ cd /scratch/na565s001f24_class_root/na565s001f24_class/skwirskj/Segment-Everythi
 module load python3.10-anaconda
 conda create -n SEEM-env python==3.10 -y
 conda activate SEEM-env
-module load cuda/11.8.0
-conda install pytorch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 pytorch-cuda=11.8 -c pytorch -c nvidia
+module load cuda/12.1.0
 ```
 
 Before running the pip install commands, you need to make sure that openmpi is installed. I have not yet tested this on ARC/Great Lakes, but this is the command you would use on Ubuntu:
@@ -44,8 +43,7 @@ Next, create the environment and install the deps:
 module load python3.10-anaconda
 conda create -n SEEM-env python==3.10 -y
 conda activate SEEM-env
-module load cuda/11.8.0
-conda install pytorch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 pytorch-cuda=11.8 -c pytorch -c nvidia -y
+module load cuda/12.1.0
 ```
 
 Run the `load_seem.py` script to load the model and pass the path to the download:
@@ -59,3 +57,28 @@ python load_seem.py --model-path=<path/to/model>
 
 installing dependencies:
 `pip install opencv-python pycocotools matplotlib onnxruntime onnx`
+
+## Using Singularity Container on ARC
+### Building the Container
+Singularity allows us to install dependencies that would otherwise require `sudo`, which is not allowed on ARC. I used [lightning.ai](lightning.ai) to run the build steps. Two files need to be added to the lightning session from our repo, [`create_seem_singularity.sh`](./singularity/create_seem_singularity.sh) and [`seem.def`](./singularity/seem.def).
+
+Once on lightning, you can run:
+
+```bash
+chmod +x create_seem_singularity.sh
+sudo ./create_seem_singularity.sh
+```
+
+which will create a file called `seem_container.sif`. This is what is used on ARC to run the model within. To copy the container to ARC, use the following command
+```bash
+rsync -av -e ssh original/ uniqname@greatlakes.arc-ts.umich.edu:/path/to/destination/
+```
+
+### Running on ARC
+To run on arc, first load `singularity 4.3.1` into the session, then run the container:
+```bash
+module load singularity/4.3.1
+singularity run --nv vln_diffusion.sif
+```
+
+which will run whatever script you have placed under the `%runscript` section in [`seem.def`](./singularity/seem.def).
