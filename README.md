@@ -52,3 +52,10 @@ Run the `load_seem.py` script to load the model and pass the path to the downloa
 ```bash
 python load_seem.py --model-path=<path/to/model>
 ```
+
+
+## Installation Guide for SAM
+`pip install git+https://github.com/facebookresearch/segment-anything.git`
+
+installing dependencies:
+`pip install opencv-python pycocotools matplotlib onnxruntime onnx`
