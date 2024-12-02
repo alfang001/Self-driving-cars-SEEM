@@ -76,3 +76,9 @@ singularity run --nv vln_diffusion.sif
 ```
 
 which will run whatever script you have placed under the `%runscript` section in [`seem.def`](./singularity/seem.def).
+
+## Installation Guide for SAM
+`pip install git+https://github.com/facebookresearch/segment-anything.git`
+
+installing dependencies:
+`pip install opencv-python pycocotools matplotlib onnxruntime onnx`
