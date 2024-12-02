@@ -1,23 +1,26 @@
-import argparse
-
+import sys
 import torch
+
+# Add the path for the SEEM project to the sys path
+sys.path.insert(0, 'Segment-Everything-Everywhere-All-At-Once')
+
+from modeling.BaseModel import BaseModel
+from utils.arguments import load_opt_command
+from modeling import build_model
 
 
 # Make the main file accept arguments
-def main(kwargs):
-    # Load the model
-    model = torch.load('model.pth')
-    print(model)
-    # Turn the model into eval mode
-    model.eval()
+def main(args=None):
+    # Make sure to run this as python load_seem.py evaluate --conf_files Segment-Everything-Everywhere-All-At-Once/configs/seem/focall_unicl_lang_v1.yaml
+    # Parse arguments
+    opt, cmdline_args = load_opt_command(args)
+    opt['device'] = 'cuda'
+
+    # Load the model into eval and cuda
+    model = BaseModel(opt, build_model(opt)).from_pretrained("seem_focall_v1.pt").eval().cuda()
+
     # TODO: can call the model with model(input) to get the output
 
 if __name__ == '__main__':
-    # Parse the arguments from the commandline
-    parser = argparse.ArgumentParser()
-    # Add the arguments
-    parser.add_argument('--model-path', '-p', type=str, help='The input file path')
-    # Parse the arguments
-    args = parser.parse_args()
     # Call the main function
-    main(args)
+    main()

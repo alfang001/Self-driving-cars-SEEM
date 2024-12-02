@@ -1,4 +1,9 @@
 # Self-Driving-Cars Final Project
+Clone this project using the following command so that the SEEM project is also cloned:
+```bash
+git clone --recursive git@github.com:alfang001/Self-driving-cars-SEEM.git
+```
+
 ## Steps for installing SEEM
 After cloning the repo on ARC/Great Lakes, run the following commands. Note that this has not been able to work yet:
 ```bash
@@ -10,10 +15,16 @@ module load cuda/11.8.0
 conda install pytorch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 pytorch-cuda=11.8 -c pytorch -c nvidia
 ```
 
+Before running the pip install commands, you need to make sure that openmpi is installed. I have not yet tested this on ARC/Great Lakes, but this is the command you would use on Ubuntu:
+```bash
+sudo apt-get install openmpi-bin openmpi-doc libopenmpi-dev
+```
+
 Now following the install instructions from SEEM:
 ```bash
 pip install -r assets/requirements/requirements.txt
 pip install -r assets/requirements/requirements_custom.txt
+cd modeling/vision/encoder/ops && sh make.sh && cd ../../../../
 ```
 
 To delete the `conda` environment:
