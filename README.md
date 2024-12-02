@@ -55,7 +55,7 @@ python load_seem.py --model-path=<path/to/model>
 
 ## Using Singularity Container on ARC
 ### Building the Container
-Singularity allows us to install dependencies that would otherwise require `sudo`, which is not allowed on ARC. I used [lightning.ai](lightning.ai) to run the build steps. Two files need to be added to the lightning session from our repo, [create_seem_singularity.sh](./singularity/create_seem_singularity.sh) and [seem.def](./singularity/seem.def).
+Singularity allows us to install dependencies that would otherwise require `sudo`, which is not allowed on ARC. I used [lightning.ai](lightning.ai) to run the build steps. Two files need to be added to the lightning session from our repo, [`create_seem_singularity.sh`](./singularity/create_seem_singularity.sh) and [`seem.def`](./singularity/seem.def).
 
 Once on lightning, you can run:
 
@@ -76,4 +76,4 @@ module load singularity/4.3.1
 singularity run --nv vln_diffusion.sif
 ```
 
-which will run whatever script you have placed under the `%runscript` section in [seem.def](./singularity/seem.def).
+which will run whatever script you have placed under the `%runscript` section in [`seem.def`](./singularity/seem.def).
