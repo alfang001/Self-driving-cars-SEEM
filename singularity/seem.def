@@ -35,6 +35,8 @@ From: nvidia/cuda:12.1.0-devel-ubuntu22.04
     pip3 install --upgrade pip
 
     # Clone the repo
+    mkdir /repo
+    cd /repo
     git clone --recursive https://github.com/alfang001/Self-driving-cars-SEEM.git
 
     # Install the requirements
@@ -44,6 +46,5 @@ From: nvidia/cuda:12.1.0-devel-ubuntu22.04
     cd modeling/vision/encoder/ops && sh make.sh && cd ../../../../
 
     # Back to the main directory to download model
-    cd ..
+    cd /repo/Self-driving-cars-SEEM
     wget https://huggingface.co/xdecoder/SEEM/resolve/main/seem_focall_v1.pt
-
