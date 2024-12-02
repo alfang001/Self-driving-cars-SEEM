@@ -11,8 +11,7 @@ cd /scratch/na565s001f24_class_root/na565s001f24_class/skwirskj/Segment-Everythi
 module load python3.10-anaconda
 conda create -n SEEM-env python==3.10 -y
 conda activate SEEM-env
-module load cuda/11.8.0
-conda install pytorch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 pytorch-cuda=11.8 -c pytorch -c nvidia
+module load cuda/12.1.0
 ```
 
 Before running the pip install commands, you need to make sure that openmpi is installed. I have not yet tested this on ARC/Great Lakes, but this is the command you would use on Ubuntu:
@@ -44,8 +43,7 @@ Next, create the environment and install the deps:
 module load python3.10-anaconda
 conda create -n SEEM-env python==3.10 -y
 conda activate SEEM-env
-module load cuda/11.8.0
-conda install pytorch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 pytorch-cuda=11.8 -c pytorch -c nvidia -y
+module load cuda/12.1.0
 ```
 
 Run the `load_seem.py` script to load the model and pass the path to the download:
