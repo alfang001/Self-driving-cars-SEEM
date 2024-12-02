@@ -51,13 +51,6 @@ Run the `load_seem.py` script to load the model and pass the path to the downloa
 python load_seem.py --model-path=<path/to/model>
 ```
 
-
-## Installation Guide for SAM
-`pip install git+https://github.com/facebookresearch/segment-anything.git`
-
-installing dependencies:
-`pip install opencv-python pycocotools matplotlib onnxruntime onnx`
-
 ## Using Singularity Container on ARC
 ### Building the Container
 Singularity allows us to install dependencies that would otherwise require `sudo`, which is not allowed on ARC. I used [lightning.ai](lightning.ai) to run the build steps. Two files need to be added to the lightning session from our repo, [`create_seem_singularity.sh`](./singularity/create_seem_singularity.sh) and [`seem.def`](./singularity/seem.def).
@@ -82,3 +75,9 @@ singularity run --nv vln_diffusion.sif
 ```
 
 which will run whatever script you have placed under the `%runscript` section in [`seem.def`](./singularity/seem.def).
+
+## Installation Guide for SAM
+`pip install git+https://github.com/facebookresearch/segment-anything.git`
+
+installing dependencies:
+`pip install opencv-python pycocotools matplotlib onnxruntime onnx`
