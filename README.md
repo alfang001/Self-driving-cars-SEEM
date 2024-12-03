@@ -80,6 +80,21 @@ singularity shell --nv --overlay seem_overlay.img seem_container.sif
 
 which will run whatever script you have placed under the `%runscript` section in [`seem.def`](./singularity/seem.def).
 
+# Datasets
+## Cityscapes install
+Following the install steps, you have access to scripts that can assist with the setup of the cityscapes dataset. For more information, visit [cityscapes github](https://github.com/mcordts/cityscapesScripts). Note that only X-Decoder will be used for this dataset.
+
+```bash
+csDownload -d Segment-Everything-Everywhere-All-At-Once/.xdecoder_data/cityscapes gtFine_trainvaltest.zip
+unzip gtFine_trainvaltest.zip
+csDownload -d Segment-Everything-Everywhere-All-At-Once/.xdecoder_data/cityscapes leftImg8bit_trainvaltest.zip
+unzip leftImg8bit_trainvaltest.zip
+csCreateTrainIdLabelImgs
+csCreatePanopticImgs
+```
+
+The dataset is now prepared!
+
 ## Installation Guide for SAM
 `pip install git+https://github.com/facebookresearch/segment-anything.git`
 

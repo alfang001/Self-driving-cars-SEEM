@@ -25,6 +25,7 @@ From: nvidia/cuda:12.1.0-devel-ubuntu22.04
         openmpi-bin \
         openmpi-doc \
         libopenmpi-dev \
+        unzip \
         && apt-get clean
 
     # Set Python 3.10 as default
@@ -48,3 +49,7 @@ From: nvidia/cuda:12.1.0-devel-ubuntu22.04
     # Back to the main directory to download model
     cd /repo/Self-driving-cars-SEEM
     wget https://huggingface.co/xdecoder/SEEM/resolve/main/seem_focall_v1.pt
+
+    # Adding the data
+    cd Segment-Everything-Everywhere-All-At-Once
+    mkdir .xdecoder_data/
