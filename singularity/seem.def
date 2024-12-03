@@ -49,3 +49,10 @@ From: nvidia/cuda:12.1.0-devel-ubuntu22.04
     # Back to the main directory to download model
     cd /repo/Self-driving-cars-SEEM
     wget https://huggingface.co/xdecoder/SEEM/resolve/main/seem_focall_v1.pt
+
+    # Adding the data
+    cd Segment-Everything-Everywhere-All-At-Once
+    mkdir .xdecoder_data/
+    cd .xdecoder_data
+    csDownload -d ~/repo/Self-driving-cars-SEEM/Segment-Everything-Everywhere-All-At-Once/.xdecoder_data/cityscapes gtFine_trainvaltest.zip
+    csDownload -d ~/repo/Self-driving-cars-SEEM/Segment-Everything-Everywhere-All-At-Once/.xdecoder_data/cityscapes leftImg8bit_trainvaltest.zip
