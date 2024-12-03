@@ -68,11 +68,14 @@ rsync -av -e ssh original/ uniqname@greatlakes.arc-ts.umich.edu:/path/to/destina
 ```
 
 ### Running on ARC
-To run on arc, first load `singularity 4.3.1` into the session, then run the container:
+To run on arc, first ssh in and load `singularity 4.3.1` into the session, then run the container:
 ```bash
+ssh <uniqname>@greatlakes.arc-ts.umich.edu
+# You do not need to do this step if you're not running anything with GPUs
 salloc --account=na565s001f24_class --partition=gpu -c 16 --gpus=1 --mem=8GB --time=01:00:00
 module load singularity/4.3.1
-singularity run --nv vln_diffusion.sif
+cd skwirskj/singularity_run
+singularity shell --nv --overlay seem_overlay.img seem_container.sif
 ```
 
 which will run whatever script you have placed under the `%runscript` section in [`seem.def`](./singularity/seem.def).
