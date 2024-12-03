@@ -164,3 +164,4 @@ cython_debug/
 # User Defined
 *.pt
 *.pth
+.xdecoder_data/
