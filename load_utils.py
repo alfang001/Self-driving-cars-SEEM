@@ -106,9 +106,9 @@ def load_and_evaluate(opt, checkpoint_path, test_dataset, batch_size=32):
 
 
 # This is an example on how to use it!! Not 100% sure right now
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
-    checkpoint_path = "/path/to/saved/checkpoint"
-    test_dataset = TestDataset()
-    # Load the model and evaluate on the test dataset
-    results = load_and_evaluate(checkpoint_path, test_dataset)
+#     checkpoint_path = "/path/to/saved/checkpoint"
+#     test_dataset = TestDataset()
+#     # Load the model and evaluate on the test dataset
+#     results = load_and_evaluate(checkpoint_path, test_dataset)
