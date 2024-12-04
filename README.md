@@ -11,7 +11,7 @@ cd /scratch/na565s001f24_class_root/na565s001f24_class/skwirskj/Segment-Everythi
 module load python3.10-anaconda
 conda create -n SEEM-env python==3.10 -y
 conda activate SEEM-env
-module load cuda/12.1.0
+module load cuda/12.1.1
 ```
 
 Before running the pip install commands, you need to make sure that openmpi is installed. I have not yet tested this on ARC/Great Lakes, but this is the command you would use on Ubuntu:
