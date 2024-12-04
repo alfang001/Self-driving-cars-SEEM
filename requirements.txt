@@ -3,4 +3,7 @@ torch==2.1.0
 torchvision==0.16.0
 torchaudio==2.1.0
 numpy
+timm==0.4.12
+einops==0.7.0
+mpi4py==3.1.5
 git+https://github.com/mcordts/cityscapesScripts.git
