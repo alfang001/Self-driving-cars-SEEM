@@ -3,6 +3,56 @@ import torch
 from utils.arguments import load_opt_command
 from trainer.utils_trainer import UtilsTrainer
 from trainer.default_trainer import DefaultTrainer
+import torch
+from torch.utils.data import Dataset
+from nuscenes.nuscenes import NuScenes
+from PIL import Image
+import os
+
+class NuScenes2DImageDataset(Dataset):
+    def __init__(self, nusc, camera="CAM_FRONT", transform=None):
+        """
+        Initialize the dataset for 2D images.
+        :param nusc: NuScenes object.
+        :param camera: Camera channel (e.g., 'CAM_FRONT', 'CAM_BACK', etc.).
+        :param transform: Transformations to apply to the images.
+        """
+        self.nusc = nusc
+        self.camera = camera
+        self.transform = transform
+        self.samples = [s['data'][camera] for s in nusc.sample]  # Get all samples for the specified camera
+
+    def __len__(self):
+        """Return the number of samples."""
+        return len(self.samples)
+
+    def __getitem__(self, idx):
+        """
+        Retrieve a single sample.
+        :param idx: Index of the sample.
+        :return: A dictionary containing the image and metadata.
+        """
+        cam_token = self.samples[idx]
+        cam_data = self.nusc.get('sample_data', cam_token)
+        cam_path = self.nusc.get_sample_data_path(cam_token)
+        
+        # Load the image
+        image = Image.open(cam_path).convert("RGB")
+        
+        # Apply transformations if specified
+        if self.transform:
+            image = self.transform(image)
+        
+        # Prepare the data dictionary
+        data = {
+            'image': image,
+            'file_path': cam_path,
+            'camera_token': cam_token,
+            'timestamp': cam_data['timestamp']
+        }
+
+        return data
+
 
 def load_and_evaluate(opt, checkpoint_path, test_dataset, batch_size=32):
     """
