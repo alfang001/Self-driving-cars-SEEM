@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from modeling.BaseModel import BaseModel
 from utils.arguments import load_opt_command
 from modeling import build_model
-
+from load_utils import load_and_evaluate
 from dataloader import build_detection_test_loader
 
 
@@ -22,8 +22,9 @@ def main(args=None):
     opt['device'] = 'cuda'
 
     # Load the model into eval and cuda
-    model = BaseModel(opt, build_model(opt)).from_pretrained("seem_focall_v1.pt").eval().cuda()
+    # model = BaseModel(opt, build_model(opt)).from_pretrained("seem_focall_v1.pt").eval().cuda()
     
+    results = load_and_evaluate(opt, ,test_dataset, batch_size=)
 
     # Load the eval dataset
     # eval_dataloader = build_detection_test_loader()

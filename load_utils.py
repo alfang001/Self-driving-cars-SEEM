@@ -4,7 +4,7 @@ from utils.arguments import load_opt_command
 from trainer.utils_trainer import UtilsTrainer
 from trainer.default_trainer import DefaultTrainer
 
-def load_and_evaluate(checkpoint_path, test_dataset, batch_size=32):
+def load_and_evaluate(opt, checkpoint_path, test_dataset, batch_size=32):
     """
     Loads a saved model from the checkpoint and evaluates it on the test dataset.
     
@@ -13,7 +13,7 @@ def load_and_evaluate(checkpoint_path, test_dataset, batch_size=32):
     :param batch_size: Batch size for testing.
     """
     # Load options and initialize trainer
-    opt, _ = load_opt_command()  
+    opt, _ =  opt
     opt['RESUME_FROM'] = checkpoint_path
     opt['EVAL_AT_START'] = True
     trainer = DefaultTrainer(opt)
@@ -46,7 +46,7 @@ def load_and_evaluate(checkpoint_path, test_dataset, batch_size=32):
             for module_name in trainer.model_names:
                 outputs[module_name] = trainer.models[module_name](inputs)
             
-            # Compute metrics here
+            # Compute metrics
             # results[module_name].append(custom_metric(outputs[module_name], targets))
             
             print(f"Processed batch {batch_idx + 1}/{len(test_dataloader)}")
@@ -55,7 +55,7 @@ def load_and_evaluate(checkpoint_path, test_dataset, batch_size=32):
     return results
 
 
-
+# This is an example on how to use it!! Not 100% sure right now
 if __name__ == "__main__":
     
     checkpoint_path = "/path/to/saved/checkpoint"
