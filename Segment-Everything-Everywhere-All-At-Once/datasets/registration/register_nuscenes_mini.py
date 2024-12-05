@@ -56,11 +56,31 @@ def load_nuscenes_semantic_segmentation(name, dirname):
     return ret
 
 def get_dataset_dict():
-    dataset_dict = {}
+    dataset_dict = []
     nusc = NuScenes(version='v1.0-mini', dataroot='datasets/nuscenes', verbose=True)
 
+    # Go through the images in the dataset
+    for i in range(len(nusc.scene)):
+        scene = nusc.scene[i]
+        first_sample_token = scene['first_sample_token']
+        last_sample_token = scene['last_sample_token']
+        sample_token = first_sample_token
+
+        # iterate through the samples in the scene
+        while sample_token != last_sample_token:
+            sample = nusc.get('sample', sample_token)
+            sensor_data = nusc.get('sample_data', sample['data']['CAM_FRONT'])
+            # Get the file name, id
+            dataset_dict.append({
+                'file_name': sensor_data['filename'],
+                'image_id': sensor_data['token'],
+            })
+            sample_token = sample['next']
+    return dataset_dict
+
 def register_nuscenes_panoptic(name):
-    DatasetCatalog.register('nuscenes_mini_val_v1', lambda: load_nuscenes_semantic_segmentation(name, name))
+    DatasetCatalog.register('nuscenes_mini_val_v1', lambda: get_dataset_dict())
+    # TODO: Correctly do this
     MetadataCatalog.get('nuscenes_mini_val_v1').set(
         thing_classes=["car", "pedestrian", "truck", "bus", "trailer", "construction_vehicle", "bicycle", "motorcycle"],
         stuff_classes=["road", "sidewalk", "parking", "other-flat", "building", "vegetation", "terrain", "sky", "person", "rider", "car", "truck", "bus", "train", "motorcycle", "bicycle", "traffic-sign"],
