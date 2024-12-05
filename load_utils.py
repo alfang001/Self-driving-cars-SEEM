@@ -1,13 +1,18 @@
 import os
+import sys
+
 import torch
-from utils.arguments import load_opt_command
-from trainer.utils_trainer import UtilsTrainer
-from trainer.default_trainer import DefaultTrainer
-import torch
-from torch.utils.data import Dataset
 from nuscenes.nuscenes import NuScenes
 from PIL import Image
-import os
+from torch.utils.data import Dataset
+from torchvision import transforms
+
+sys.path.insert(0, 'Segment-Everything-Everywhere-All-At-Once')
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from trainer.default_trainer import DefaultTrainer
+from trainer.utils_trainer import UtilsTrainer
+from utils.arguments import load_opt_command
+
 
 class NuScenes2DImageDataset(Dataset):
     def __init__(self, nusc, camera="CAM_FRONT", transform=None):
@@ -63,10 +68,11 @@ def load_and_evaluate(opt, checkpoint_path, test_dataset, batch_size=32):
     :param batch_size: Batch size for testing.
     """
     # Load options and initialize trainer
-    opt, _ =  opt
     opt['RESUME_FROM'] = checkpoint_path
     opt['EVAL_AT_START'] = True
+    opt['WEIGHT'] = True
     trainer = DefaultTrainer(opt)
+    trainer.eval()
     
     # Load the checkpoint
     trainer.load_checkpoint(checkpoint_path)
@@ -105,10 +111,21 @@ def load_and_evaluate(opt, checkpoint_path, test_dataset, batch_size=32):
     return results
 
 
+def main(args=None):
+    opt, cmdline_args = load_opt_command(args)
+    opt['device'] = 'cuda'
+    checkpoint_path = "seem_focall_v1.pt"
+    nusc = NuScenes(version='v1.0-mini', dataroot='datasets/nuscenes/', verbose=True)
+    transform = transforms.Compose([
+        transforms.Resize((256, 256)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    ])
+    test_dataset = NuScenes2DImageDataset(nusc, camera="CAM_FRONT", transform=transform)
+    # Load the model and evaluate on the test dataset
+    results = load_and_evaluate(opt, checkpoint_path, test_dataset)
+    print(results)
+
 # This is an example on how to use it!! Not 100% sure right now
-# if __name__ == "__main__":
-    
-#     checkpoint_path = "/path/to/saved/checkpoint"
-#     test_dataset = TestDataset()
-#     # Load the model and evaluate on the test dataset
-#     results = load_and_evaluate(checkpoint_path, test_dataset)
+if __name__ == "__main__":
+    main()

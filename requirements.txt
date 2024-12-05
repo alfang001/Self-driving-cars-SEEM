@@ -4,7 +4,7 @@ torchvision==0.16.0
 torchaudio==2.1.0
 numpy
 timm==0.4.12
-einops==0.7.0
+einops
 mpi4py==3.1.5
 nuscenes-devkit
 git+https://github.com/mcordts/cityscapesScripts.git
