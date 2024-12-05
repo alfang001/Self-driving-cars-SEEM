@@ -164,5 +164,4 @@ cython_debug/
 # User Defined
 *.pt
 *.pth
-Segment-Everything-Everywhere-All-At-Once/.xdecoder_data/
 datasets/
