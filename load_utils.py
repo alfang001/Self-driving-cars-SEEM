@@ -72,7 +72,7 @@ def load_and_evaluate(opt, checkpoint_path, test_dataset, batch_size=32):
     opt['EVAL_AT_START'] = True
     opt['WEIGHT'] = True
     trainer = DefaultTrainer(opt)
-    trainer.eval()
+    return trainer.eval()
     
     # Load the checkpoint
     trainer.load_checkpoint(checkpoint_path)
