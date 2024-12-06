@@ -78,14 +78,14 @@ def get_dataset_dict():
             sample_token = sample['next']
     return dataset_dict
 
-def register_nuscenes_panoptic(name):
+def register_nuscenes_sem_seg(name):
     DatasetCatalog.register('nuscenes_mini_val_v1', lambda: get_dataset_dict())
     # TODO: Correctly do this
     MetadataCatalog.get('nuscenes_mini_val_v1').set(
         thing_classes=["car", "pedestrian", "truck", "bus", "trailer", "construction_vehicle", "bicycle", "motorcycle"],
         stuff_classes=["road", "sidewalk", "parking", "other-flat", "building", "vegetation", "terrain", "sky", "person", "rider", "car", "truck", "bus", "train", "motorcycle", "bicycle", "traffic-sign"],
-        evaluator_type="coco_panoptic_seg",
+        evaluator_type="sem_seg",
     )
 
 _root = os.getenv("DATASET", "datasets")
-register_nuscenes_panoptic(_root)
+register_nuscenes_sem_seg(_root)
