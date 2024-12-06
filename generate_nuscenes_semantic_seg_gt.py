@@ -18,6 +18,8 @@ def generate_nuscenes_semantic_segmentation_gt():
             sample = nusc.get('sample', sample_token)
             pointsensor_token = sample['data'][POINT_SENSOR_CHANNEL]
             camera_token = sample['data'][SENSOR_CHANNEL]
+
+            # Map the point cloud to the image, im is the image without semantic labels on it
             points, coloring, im = nusc.explorer.map_pointcloud_to_image(pointsensor_token, camera_token,
                                                                     render_intensity=False,
                                                                     show_lidarseg=True,
@@ -27,6 +29,13 @@ def generate_nuscenes_semantic_segmentation_gt():
             # TODO: Need to take the coloring from get_colormap and convert it to the coco-stuffs format for each point
             # then, we need to convert the coloring to a grayscale image where each pixel is labeled with a coco category as an integer
             # finally, we need to save the image to the gt_path.
+
+            # Points[0,:] and points[1,:] are the x and y coordinates of the points in the image of where the semantic labels are
+            cam_front_x, cam_front_y = points[0,:], points[1,:]
+
+            # each entry in coloring corresponds to a point in the point cloud, so coloring[0,:] is the RGB (or BGR) value of the first point in points
+            
+            import pdb; pdb.set_trace()
             sample_token = sample['next']
         
 
