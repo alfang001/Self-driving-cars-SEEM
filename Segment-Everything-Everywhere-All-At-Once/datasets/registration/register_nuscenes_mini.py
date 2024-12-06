@@ -45,6 +45,18 @@ NUSC_ID_2_NAME_LIST = []
 for key, value in NUSC_ID_2_NAME.items():
     NUSC_ID_2_NAME_LIST.append({'id': key, 'name': value})
 
+# Converting the nuscenes categories to coco categories
+NUSCENES_2_COCO = {}
+
+def get_nuscenes_full_meta():
+    stuff_ids = [k["id"] for k in NUSC_ID_2_NAME_LIST]
+    stuff_dataset_id_to_contiguous_id = {k: i for i, k in enumerate(stuff_ids)}
+    stuff_classes = [k["name"] for k in NUSC_ID_2_NAME_LIST]
+    ret = {
+        "stuff_dataset_id_to_contiguous_id": stuff_dataset_id_to_contiguous_id,
+        "stuff_classes": stuff_classes,
+    }
+    return ret
 
 # TODO: Map nuscenes categories to detectron2 categories
 def load_nuscenes_semantic_segmentation(name, dirname):
@@ -70,6 +82,12 @@ def get_dataset_dict():
         while sample_token != last_sample_token:
             sample = nusc.get('sample', sample_token)
             sensor_data = nusc.get('sample_data', sample['data']['CAM_FRONT'])
+
+            # TODO: Need to get the groundtruth semantic labels for the image
+            # 1. Find the masks for the given image
+            # 2. Get coco equivalent masks for the given image
+            # 3. Make a grayscale image of the masks where each pixel is labeled with a coco category as an integer
+
             # Get the file name, id
             dataset_dict.append({
                 'file_name': sensor_data['filename'],
@@ -79,11 +97,13 @@ def get_dataset_dict():
     return dataset_dict
 
 def register_nuscenes_sem_seg(name):
+    meta = get_nuscenes_full_meta()
     DatasetCatalog.register('nuscenes_mini_val_v1', lambda: get_dataset_dict())
     # TODO: Correctly do this
     MetadataCatalog.get('nuscenes_mini_val_v1').set(
-        thing_classes=["car", "pedestrian", "truck", "bus", "trailer", "construction_vehicle", "bicycle", "motorcycle"],
-        stuff_classes=["road", "sidewalk", "parking", "other-flat", "building", "vegetation", "terrain", "sky", "person", "rider", "car", "truck", "bus", "train", "motorcycle", "bicycle", "traffic-sign"],
+        stuff_classes=meta['stuff_classes'][:],
+        image_root='datasets/nuscenes/samples/CAM_FRONT',
+        # TODO: Add the gt_path once this is created
         evaluator_type="sem_seg",
     )
 
