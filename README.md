@@ -4,6 +4,45 @@ Clone this project using the following command so that the SEEM project is also 
 git clone --recursive git@github.com:alfang001/Self-driving-cars-SEEM.git
 ```
 
+## Steps for installing and running SEEM locally
+After cloning the repo to a Linux machine, run the following:
+```bash
+conda create -n SEEM-env python==3.10 -y
+conda activate SEEM-env
+```
+
+Before running the pip install commands, you need to make sure that openmpi is installed. I have not yet tested this on ARC/Great Lakes, but this is the command you would use on Ubuntu:
+```bash
+sudo apt-get install openmpi-bin openmpi-doc libopenmpi-dev
+```
+
+Now following the install instructions from SEEM:
+```bash
+pip install -r assets/requirements/requirements.txt
+pip install -r assets/requirements/requirements_custom.txt
+cd modeling/vision/encoder/ops && sh make.sh && cd ../../../../
+```
+
+Follow the steps for isntalling the evaluation tool in [INSTALL.md](./Segment-Everything-Everywhere-All-At-Once/assets/readmes/INSTALL.md).
+
+### Datasets install
+Download the nuScenes Mini dataset and LiDAR segmentation files and unpack the files under a directory named `datasets` in the root of this project.
+
+Follow dataset install instructions for everything that is NOT actual data from the [DATASET.md](./Segment-Everything-Everywhere-All-At-Once/assets/readmes/DATASET.md) file, making sure to create a directory named `Segment-Everything-Everywhere-All-At-Once/.xdecoder_data`. 
+
+Next, generate the ground truths for nuScenes semantic segmentation by running the following from the root:
+```bash
+python generate_nuscenes_semantic_seg_gt.py
+```
+
+### Running SEEM evaluation
+Run the following from the root to start evaluation:
+```bash
+python load_utils.py --conf_files=Segment-Everything-Everywhere-All-At-Once/configs/seem/focall_unicl_lang_v1.yaml evaluate
+```
+
+# NOTE: Everything below this was used when trying to configure the project on ARC. This is not fully tested.
+
 ## Steps for installing SEEM
 After cloning the repo on ARC/Great Lakes, run the following commands. Note that this has not been able to work yet:
 ```bash
@@ -79,24 +118,3 @@ singularity shell --nv --overlay seem_overlay.img seem_container.sif
 ```
 
 which will run whatever script you have placed under the `%runscript` section in [`seem.def`](./singularity/seem.def).
-
-# Datasets
-## Cityscapes install
-Following the install steps, you have access to scripts that can assist with the setup of the cityscapes dataset. For more information, visit [cityscapes github](https://github.com/mcordts/cityscapesScripts). Note that only X-Decoder will be used for this dataset.
-
-```bash
-csDownload -d Segment-Everything-Everywhere-All-At-Once/.xdecoder_data/cityscapes gtFine_trainvaltest.zip
-unzip gtFine_trainvaltest.zip
-csDownload -d Segment-Everything-Everywhere-All-At-Once/.xdecoder_data/cityscapes leftImg8bit_trainvaltest.zip
-unzip leftImg8bit_trainvaltest.zip
-csCreateTrainIdLabelImgs
-csCreatePanopticImgs
-```
-
-The dataset is now prepared!
-
-## Installation Guide for SAM
-`pip install git+https://github.com/facebookresearch/segment-anything.git`
-
-installing dependencies:
-`pip install opencv-python pycocotools matplotlib onnxruntime onnx`

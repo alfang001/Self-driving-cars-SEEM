@@ -1,41 +1,8 @@
-# import torch
-# from modeling.utils import configurable
-
-# __all__ = ["NuscenesDatasetMapper"]
-
-# class NuscenesDatasetMapper:
-#     @configurable
-#     def __init__(self, is_train=True, tfm_gens=None, image_format=None, min_size_test=None, max_size_test=None, mean=None, std=None):
-#         """
-#         NOTE: this interface is experimental.
-#         Args:
-#             is_train: for training or inference
-#             augmentations: a list of augmentations or deterministic transforms to apply
-#             tfm_gens: data augmentation
-#             image_format: an image format supported by :func:`detection_utils.read_image`.
-#         """
-#         self.tfm_gens = tfm_gens
-#         self.img_format = image_format
-#         self.is_train = is_train
-#         self.min_size_test = min_size_test
-#         self.max_size_test = max_size_test
-#         self.pixel_mean = torch.tensor(mean)[:,None,None]
-#         self.pixel_std = torch.tensor(std)[:,None,None]
-
-#         # t = []
-#         # t.append(T.ResizeShortestEdge(min_size_test, max_size=max_size_test))
-#         # self.transform = transforms.Compose(t)        # self.transform = transforms.Compose(t)        # self.transform = transforms.Compose(t)        # self.transform = transforms.Compose(t)
-
-#     @classmethod
-#     def from_config(cls, cfg, is_train=True):
-#         pass
-
 import copy
 import logging
 
 import numpy as np
 import torch
-from detectron2.data import detection_utils as utils
 from detectron2.data import transforms as T
 from PIL import Image
 
@@ -142,19 +109,5 @@ class NuScenesSemanticSegmentationMapper:
         semseg = torch.from_numpy(semseg.astype(np.uint8))
         dataset_dict["image"] = image
         dataset_dict["sem_seg"] = semseg
-
-        # image = utils.read_image(dataset_dict["file_name"], format=self.image_format)
-        # utils.check_image_size(dataset_dict, image)
-
-        # # Read the semantic segmentation mask
-        # semseg = self.read_semseg(dataset_dict["sem_seg_file_name"])
-
-        # # Apply transformations to the image and mask
-        # image, transforms = T.apply_transform_gens(self.tfm_gens, image)
-        # semseg = transforms.apply_segmentation(semseg)
-
-        # # Convert to torch tensors
-        # dataset_dict["image"] = torch.as_tensor(np.ascontiguousarray(image.transpose(2, 0, 1)))
-        # dataset_dict["sem_seg"] = torch.as_tensor(semseg.astype("long"))
 
         return dataset_dict

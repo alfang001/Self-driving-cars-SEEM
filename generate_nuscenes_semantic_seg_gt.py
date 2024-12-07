@@ -79,12 +79,6 @@ def generate_nuscenes_semantic_segmentation_gt():
             # Assert that the min and max of the points are within the image size
             assert np.logical_and(np.all(points[0, :] >= 0), np.all(points[0, :] < im.size[0]))
             assert np.logical_and(np.all(points[1, :] >= 0), np.all(points[1, :] < im.size[1]))
-            
-            """
-            TODO: Need to take the coloring from get_colormap and convert it to the coco-stuffs format for each point
-            then, we need to convert the coloring to a grayscale image where each pixel is labeled with a coco category as an integer
-            finally, we need to save the image to the gt_path.
-            """
 
             # Points[0,:] and points[1,:] are the x and y coordinates of the points in the image of where the semantic labels are
             cam_front_x, cam_front_y = points[1,:], points[0,:]

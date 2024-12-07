@@ -1,15 +1,16 @@
-import sys,os
-import torch
+import os
+import sys
+
 from nuscenes.nuscenes import NuScenes
+
 sys.path.insert(0, 'Segment-Everything-Everywhere-All-At-Once')
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-# from datasets.evaluation.classification_evaluation import ClassificationEvaluator
-from modeling.BaseModel import BaseModel
-from utils.arguments import load_opt_command
-from modeling import build_model
-from load_utils import load_and_evaluate, NuScenes2DImageDataset
-from dataloader import build_detection_test_loader
+
 from torchvision import transforms
+from utils.arguments import load_opt_command
+
+from load_utils import NuScenes2DImageDataset, load_and_evaluate
+
 
 # Make the main file accept arguments
 def main(args=None):
@@ -30,14 +31,8 @@ def main(args=None):
     ])
     test_dataset = NuScenes2DImageDataset(nusc, camera="CAM_FRONT", transform=transform)
     results = load_and_evaluate(opt, test_dataset, checkpoint_path=None, batch_size=32)
-    
-    # Load the eval dataset
-    # eval_dataloader = build_detection_test_loader()
 
-    # for images, labels in eval_dataloader:
-    #     outputs = model(images)
-
-    # TODO: can call the model with model(input) to get the output
+    print(results)
 
 if __name__ == '__main__':
     # Call the main function

@@ -1,10 +1,7 @@
-import collections
-import json
 import os
 
 from detectron2.data import DatasetCatalog, MetadataCatalog
 from detectron2.data.datasets import load_sem_seg
-from detectron2.utils.file_io import PathManager
 from nuscenes import NuScenes
 
 # Panoptic labels for nuscenes
@@ -59,7 +56,6 @@ def get_nuscenes_full_meta():
     }
     return ret
 
-# TODO: Map nuscenes categories to detectron2 categories
 def load_nuscenes_semantic_segmentation(name, dirname):
     IMG_FOLDER = os.path.join(dirname, 'samples', 'CAM_FRONT')
     # TODO: Get the labels
@@ -83,11 +79,6 @@ def get_dataset_dict():
         while sample_token != last_sample_token:
             sample = nusc.get('sample', sample_token)
             sensor_data = nusc.get('sample_data', sample['data']['CAM_FRONT'])
-
-            # TODO: Need to get the groundtruth semantic labels for the image
-            # 1. Find the masks for the given image
-            # 2. Get coco equivalent masks for the given image
-            # 3. Make a grayscale image of the masks where each pixel is labeled with a coco category as an integer
 
             # Get the file name, id
             dataset_dict.append({
