@@ -3,6 +3,7 @@ import json
 import os
 
 from detectron2.data import DatasetCatalog, MetadataCatalog
+from detectron2.data.datasets import load_sem_seg
 from detectron2.utils.file_io import PathManager
 from nuscenes import NuScenes
 
@@ -98,13 +99,18 @@ def get_dataset_dict():
 
 def register_nuscenes_sem_seg(name):
     meta = get_nuscenes_full_meta()
-    DatasetCatalog.register('nuscenes_mini_val_v1', lambda: get_dataset_dict())
-    # TODO: Correctly do this
+    image_dir = 'datasets/nuscenes/samples/CAM_FRONT'
+    gt_dir = 'datasets/nuscenes/sem_seg_samples_gt/CAM_FRONT'
+    DatasetCatalog.register('nuscenes_mini_val_v1', lambda x=image_dir, y=gt_dir: load_sem_seg(y, x, gt_ext='jpg', image_ext='jpg'))
     MetadataCatalog.get('nuscenes_mini_val_v1').set(
         stuff_classes=meta['stuff_classes'][:],
-        image_root='datasets/nuscenes/samples/CAM_FRONT',
-        # TODO: Add the gt_path once this is created
+        image_root=image_dir,
+        sem_seg_root=gt_dir,
+        thing_dataset_id_to_contiguous_id={},
         evaluator_type="sem_seg",
+        ignore_label=0,
+        class_offset=0,
+        keep_sem_bgd=False,
     )
 
 _root = os.getenv("DATASET", "datasets")

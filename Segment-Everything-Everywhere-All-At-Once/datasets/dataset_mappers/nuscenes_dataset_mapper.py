@@ -85,8 +85,8 @@ class NuScenesSemanticSegmentationMapper:
         self,
         is_train=True,
         tfm_gens=None,
-        image_format=None,
-        semseg_format="png",
+        image_format="jpg",
+        semseg_format="jpg",
     ):
         self.is_train = is_train
         self.tfm_gens = tfm_gens
@@ -116,6 +116,8 @@ class NuScenesSemanticSegmentationMapper:
             return np.asarray(Image.open(file_name))
         elif self.semseg_format == "npz":
             return np.load(file_name)['arr_0']
+        elif self.semseg_format == "jpg":
+            return np.asarray(Image.open(file_name))
         else:
             raise ValueError(f"Unsupported semantic segmentation format: {self.semseg_format}")
 
@@ -128,18 +130,31 @@ class NuScenesSemanticSegmentationMapper:
             dict: A Detectron2-compatible format.
         """
         dataset_dict = copy.deepcopy(dataset_dict)
-        image = utils.read_image(dataset_dict["file_name"], format=self.image_format)
-        utils.check_image_size(dataset_dict, image)
+        file_name = dataset_dict["file_name"]
+        semseg_name = dataset_dict["sem_seg_file_name"]
+        image = Image.open(file_name).convert("RGB")
+        dataset_dict["width"] = image.size[0]
+        dataset_dict["height"] = image.size[1]
+        image = torch.from_numpy(np.asarray(image).copy())
+        image = image.permute(2,0,1)
 
-        # Read the semantic segmentation mask
-        semseg = self.read_semseg(dataset_dict["sem_seg_file_name"])
+        semseg = self.read_semseg(semseg_name)
+        semseg = torch.from_numpy(semseg.astype(np.uint8))
+        dataset_dict["image"] = image
+        dataset_dict["sem_seg"] = semseg
 
-        # Apply transformations to the image and mask
-        image, transforms = T.apply_transform_gens(self.tfm_gens, image)
-        semseg = transforms.apply_segmentation(semseg)
+        # image = utils.read_image(dataset_dict["file_name"], format=self.image_format)
+        # utils.check_image_size(dataset_dict, image)
 
-        # Convert to torch tensors
-        dataset_dict["image"] = torch.as_tensor(np.ascontiguousarray(image.transpose(2, 0, 1)))
-        dataset_dict["sem_seg"] = torch.as_tensor(semseg.astype("long"))
+        # # Read the semantic segmentation mask
+        # semseg = self.read_semseg(dataset_dict["sem_seg_file_name"])
+
+        # # Apply transformations to the image and mask
+        # image, transforms = T.apply_transform_gens(self.tfm_gens, image)
+        # semseg = transforms.apply_segmentation(semseg)
+
+        # # Convert to torch tensors
+        # dataset_dict["image"] = torch.as_tensor(np.ascontiguousarray(image.transpose(2, 0, 1)))
+        # dataset_dict["sem_seg"] = torch.as_tensor(semseg.astype("long"))
 
         return dataset_dict
